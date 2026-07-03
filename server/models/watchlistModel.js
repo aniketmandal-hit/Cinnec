@@ -12,7 +12,12 @@ const WatchlishSchema = new mongoose.Schema({
             },
     mediaType:{
             type:  String, 
-            enum: ['anime', 'drama', 'movie']
+            enum: ['anime', 'drama', 'movie'],
+            required: true
+            },
+    posterPath: {
+            type: String,
+            required: true
             },
     status: {
             type: String,
@@ -23,7 +28,7 @@ const WatchlishSchema = new mongoose.Schema({
 },
     {timestamps: true}
 )
-    WatchlishSchema.index({mediaId: 1,mediaType: 1}, {unique: true});
+    WatchlishSchema.index({userId: 1,mediaId: 1,mediaType: 1}, {unique: true});
     
     const watchlistModel = mongoose.models.watchlist || mongoose.model('watchlist', WatchlishSchema)
     export default watchlistModel

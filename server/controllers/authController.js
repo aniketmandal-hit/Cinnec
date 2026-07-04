@@ -4,9 +4,9 @@ import bcrypt from 'bcryptjs'
  
     //yaha register krega user
 export const register = async(req, res)=>{
-    const {username, email, password} = req.body
+    const {name, username, email, password} = req.body
     
-    if(!username || !email || !password){
+    if(!name || !username || !email || !password){
        return res.json({success: false, message: 'All field are required'})
     }
     if(username.length > 15 ){
@@ -24,11 +24,11 @@ export const register = async(req, res)=>{
             ]
         });
         if(existUser){
-            res.json({success: false, message: 'Username or password already exist'})
+            res.json({success: false, message: 'Username or email already exist'})
         }
         const hashedPassword = await bcrypt.hash(password,10)
 
-        const user = new userModel({username, email, password: hashedPassword})
+        const user = new userModel({name, username, email, password: hashedPassword})
          await user.save()
 
          //token & cookies part

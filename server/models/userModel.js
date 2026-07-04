@@ -1,4 +1,4 @@
-import mongoose, { models } from "mongoose";
+import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
     userName: {type: String, required: true, unique: true},
@@ -10,5 +10,5 @@ const userSchema = new mongoose.Schema({
     resetOtp: {type: String, default:''},
     resetOtpExpiresAt: {type: Number, default:0},
 })
-const userModel = mongoose.models.user || mongoose.Model('user', userSchema)
+const userModel = mongoose.models.user || mongoose.model('user', userSchema)
 export default userModel

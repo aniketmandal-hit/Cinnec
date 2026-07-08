@@ -6,9 +6,15 @@ import { AppContent } from '../context/AuthContext.jsx'
 const Home = () => {
       const {isDarkMode, setisDarkMode} = useContext(AppContent)
   return (
-    <div className=''>
-      <Navbar/>
-      <Header/>
+   <div className="w-full min-h-screen relative flex flex-col">
+      <div className="absolute top-0 left-0 w-full z-50">
+        <Navbar />
+      </div>
+
+      <main className="flex-1 w-full">
+        <Header />
+      </main>
+
     </div>
   )
 }

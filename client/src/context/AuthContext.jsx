@@ -5,9 +5,9 @@ import { createContext } from 'react'
   import api from '../utils/Api.jsx';
 import axios from 'axios';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const AppContent = createContext()
-
     axios.defaults.withCredentials = true
 
 export const AppContext = (props) => {
@@ -23,6 +23,9 @@ export const AppContext = (props) => {
           const {data} = await api.post('/api/auth/register',{name, username, email, password})
           if(data.success){
             toast.success(data.message)
+            setisLoggedin(true)
+            await getUserData();
+            setloginPopUp(false);
           }
         } catch (error) {
             toast.error(error.message)
@@ -31,14 +34,19 @@ export const AppContext = (props) => {
     //login user
 
      const loginUser = async (email, password) => {
+      console.log("➡️ A. registerUser function started inside context!");
         try {
+          console.log("➡️ B. Sending API post request to backend...");
           const {data} = await api.post('/api/auth/login',{email, password})
+          console.log("➡️ C. Response received from server:", data);
           if(data.success){
             toast.success(data.message)
             getUserData()
             setisLoggedin(true)
+            setloginPopUp(false)
           }
         } catch (error) {
+          console.log("❌ D. Catch block caught an error:", error);
             toast.error(error.message)
         }
     }
@@ -46,14 +54,13 @@ export const AppContext = (props) => {
     //get the user data (profile)
     const getUserData = async()=>{
         try {
-            const {data} = await api.get('/api/user')
+            const {data} = await api.get('/api/user/')
             if(data.success){
-                toast.success(data.message)
                 setuser(data.user)
                 setisLoggedin(true)
             }
         } catch (error) {
-            toast.error(error.message)
+            console.log('user error', error)
           }
         }
       
@@ -63,7 +70,8 @@ export const AppContext = (props) => {
             user, setuser,
             getUserData,
             loginPopUp, setloginPopUp,
-            isDarkMode, setisDarkMode
+            isDarkMode, setisDarkMode,
+            registerUser, loginUser
         }
         
     useEffect(()=>{

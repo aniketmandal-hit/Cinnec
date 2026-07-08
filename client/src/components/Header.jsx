@@ -17,23 +17,16 @@ const Header = () => {
 
 const onSubmitHandler = async (e) => {
   e.preventDefault();
-  
-  console.log("🟢 1. onSubmitHandler started");
-
   try {
-    if (signUp) {
-      console.log("🟢 2. About to call registerUser with:", { name, username, email, password });
-      
-      // Let's run the function
+    if (signUp) {   
       await registerUser(name, username, email, password);
-      
-      console.log("🟢 3. registerUser function finished running!");
+
     } else {
       await loginUser(email, password);
     }
   } catch (err) {
-    // 🔥 If the context function crashes, this will print the exact reason!
-    console.error("🔥 CRASH CAUGHT IN HEADER.JSX:", err);
+
+    console.error(" CRASH CAUGHT IN HEADER.JSX:", err);
   }
 };
 
@@ -77,16 +70,16 @@ const onSubmitHandler = async (e) => {
         </button>
       </div>
 
-      {/* 🔮 THE GLASS-BLUR MODAL SCREEN TRIGGER */}
+    
       {loginPopUp && (
         <div className="absolute inset-0 z-50 backdrop-blur-md flex items-center justify-center animate-fade-in
           bg-zinc-950/40 dark:bg-black/50
         ">
-          {/* Your actual Login / Registration Popup Card will go right here */}
+      
           <div className={`p-8 rounded-2xl border w-full max-w-md mx-4 shadow-2xl relative
             ${isDarkMode ? 'bg-zinc-900/80 border-zinc-800 text-white' : 'bg-white/80 border-slate-200 text-zinc-900'}
           `}>
-            {/* Close Button */}
+           
             <button 
               onClick={() => setloginPopUp(false)}
               className="absolute top-4 right-4 font-bold text-zinc-400 hover:text-red-500 text-lg"
@@ -186,7 +179,7 @@ const onSubmitHandler = async (e) => {
               }   
             </form>
 
-            {/* Subtle Footer Link inside the card */}
+         
             {signUp ? 
             <p onClick={()=>setsignUp(!signUp)} className="text-center text-xs mt-4 opacity-60">
               Already have an account?{' '}

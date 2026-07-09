@@ -3,7 +3,7 @@ import { Route, Routes, Navigate } from 'react-router-dom'
 import Home from './pages/Home'
 import Profile from './pages/Profile'
 import { ToastContainer } from 'react-toastify';
-import ProtectedRoute from './components/ProtectedRoute.jsx'
+
 import { AppContent } from './context/AuthContext.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 
@@ -25,13 +25,7 @@ const App = () => {
           {/* 🎬 Protected Dashboard Route */}
           <Route path="/dashboard" element={isLoggedin ? <Dashboard /> : <Navigate to="/" />} />
       
-          <Route path='/profile'
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
+           <Route path="/profile" element={isLoggedin ? <Profile /> : <Navigate to="/" />} />
         </Routes>
       </main>
     </div>

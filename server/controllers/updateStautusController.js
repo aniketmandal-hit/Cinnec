@@ -6,14 +6,14 @@ export const updateWatchlistStatus = async(req, res)=>{
     const {mediaId, status} = req.body
 
     try {
-        const updateStatus = await watchlistModel.findOneAndUpdate({userId,mediaId}, {status}, {new: true})
+        const updateStatus = await watchlistModel.findOneAndUpdate({userId,mediaId}, {status}, { returnDocument: 'after' })
             
         if (!updateStatus) {
             return res.json({success: false, message: 'Item not found in your watchlist'})
         }
         return res.json({success: true, message: 'Status successfully updated'})
     } catch (error) {
-        return res.json({success: true, message: error.message})
+        return res.json({success: false, message: error.message})
     }
 }
 

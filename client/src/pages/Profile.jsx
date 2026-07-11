@@ -25,35 +25,7 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
   const [profileBio, setProfileBio] = useState('Please enter your bio here');
 
   // Mock array strictly following the fields dictated by your Mongoose WatchlistSchema
-  const [watchlistData, setWatchlistData] = useState([
-    {
-      _id: "w1",
-      userId: "u123",
-      mediaId: "tmdb-550",
-      mediaType: "movie",
-      title: "Fight Club",
-      posterPath: "https://image.tmdb.org/t/p/w500/pB8g6URdFBchw13awdZFWNEe5PS.jpg",
-      status: "Completed",
-    },
-    {
-      _id: "w2",
-      userId: "u123",
-      mediaId: "tmdb-21445",
-      mediaType: "anime",
-      title: "Attack on Titan",
-      posterPath: "https://image.tmdb.org/t/p/w500/hTkbbqkPG0n7BzAeNfm260jo52v.jpg",
-      status: "Watching",
-    },
-    {
-      _id: "w3",
-      userId: "u123",
-      mediaId: "tmdb-1396",
-      mediaType: "drama",
-      title: "Breaking Bad",
-      posterPath: "https://image.tmdb.org/t/p/w500/ztkUQv6Z1Z6ZzR5EUZ62G86GJu1.jpg",
-      status: "Plan to Watch",
-    }
-  ]);
+  const [watchlistData, setWatchlistData] = useState([]);
 
   useEffect(()=>{
     if(user?.name){
@@ -73,7 +45,6 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
     try {
         const {data} = await api.get('/api/watchlist/get')
         if(data.success){
-          console.log(data.userWatchlist)
           setWatchlistData(data.userWatchlist)
         }
 
@@ -102,11 +73,27 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
    
   const statusOptions = ['Plan to Watch', 'Watching', 'Completed', 'Dropped', 'On Hold'];
 
-  const updateItemStatus = (itemId, newStatus) => {
-    setWatchlistData(prev => prev.map(item => 
-      item._id === itemId ? { ...item, status: newStatus } : item
-    ));
+  const updateItemStatus = async(mediaId, newStatus) => {
+    try {
+      const {data} = await api.put('/api/watchlist/update-status', {
+        mediaId,
+        status: newStatus
+      })
+      if (data.success) {
+        toast.success(data.success)
+        const updateStatus = filteredItems.map(watchItem => 
+      watchItem.mediaId == mediaId ? { ...watchItem, status: newStatus } : watchItem
+    )
+       
+   setWatchlistData(updateStatus)
     setProfileDropdownOpen(null); 
+      }else{
+        toast.error(data.error)
+      }
+    } catch (error) {
+      toast.error(error.message)
+    }
+    
   };
 
   const filteredItems = activeTab === 'all' 
@@ -235,7 +222,7 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
                 ) : (
                   <h1 className="text-xl font-black tracking-tight">{profileName}</h1>
                 )}
-                <p className="text-[9px] font-black text-red-500 tracking-wider uppercase mt-0.5">Vault Explorer</p>
+                <p className="text-[9px] font-black text-red-500 tracking-wider uppercase mt-0.5">@{user.username}</p>
               </div>
             </div>
 
@@ -313,9 +300,9 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
 
         {/* WATCHLIST SMALL GRID DECK */}
         
-        {watchlistData.length > 0 ? (
+        {filteredItems.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
-            {watchlistData.map((item) => (
+            {filteredItems.map((item) => (
               <div 
                 key={item._id}
                 className={`group rounded-xl overflow-hidden border flex flex-col relative shadow-md transition-all duration-300 hover:-translate-y-1
@@ -370,7 +357,7 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
                         {statusOptions.map((opt) => (
                           <button
                             key={opt}
-                            onClick={() => updateItemStatus(item._id, opt)}
+                            onClick={() => updateItemStatus(item.mediaId, opt)}
                             className={`w-full text-center py-1 text-[8px] font-extrabold rounded transition-colors cursor-pointer
                               ${item.status === opt 
                                 ? 'bg-red-600 text-white' 

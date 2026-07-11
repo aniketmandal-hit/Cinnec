@@ -8,6 +8,6 @@ export const watchlistRoute = express.Router()
 
 watchlistRoute.post('/add', authUser, watchlist)
 watchlistRoute.get('/get', authUser, getUserWatchlist)
-watchlistRoute.post('/update-status', authUser, updateWatchlistStatus)
+watchlistRoute.put('/update-status', authUser, updateWatchlistStatus)
 watchlistRoute.post('/delete', authUser, deleteWatchlistItem)
 

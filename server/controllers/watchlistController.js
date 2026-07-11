@@ -3,7 +3,7 @@ import watchlistModel from "../models/watchlistModel.js";
 
 export const watchlist = async (req, res)=>{
     const userId = req.user
-    const {mediaId, mediaType, posterPath, status} = req.body
+    const {mediaTitle, mediaName, mediaId, mediaType, posterPath, status} = req.body
 
     if(!userId){
         return res.json({success: false, message: 'Something went wrong'})
@@ -11,8 +11,9 @@ export const watchlist = async (req, res)=>{
     try {
         const watchlistItems = new watchlistModel({
             userId,
+            mediaTitle,
+            mediaName,
             mediaId,
-            mediaType,
             posterPath,
             status
         })

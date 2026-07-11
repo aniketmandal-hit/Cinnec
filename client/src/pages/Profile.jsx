@@ -1,16 +1,23 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { AppContent } from '../context/AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import api from '../utils/Api.jsx';
 
-const Profile = () => {
-  const { isDarkMode,setisDarkMode, user, setisLoggedin } = useContext(AppContent);
+const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
+  const { isDarkMode,setisDarkMode, user, isloggedin} = useContext(AppContent);
+  axios.defaults.withCredentials = true
   
+ 
+
   const navigate = useNavigate()
   // Interactive UI States
   const [isFollowing, setIsFollowing] = useState(false);
   const [isEditingProfile, setIsEditingProfile] = useState(false); 
   const [activeTab, setActiveTab] = useState('all'); 
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false); 
+  const [profileButton, setprofileButton] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   // Editable Profile Form States
   const [profileName, setProfileName] = useState(user?.name);
@@ -47,6 +54,44 @@ const Profile = () => {
     }
   ]);
 
+  //Loading screen for refresh
+  useEffect(()=>{
+    const fetchProfileContent = async () => {
+      
+        setLoading(true);
+        
+        if (isloggedin === false) {
+          navigate('/')
+        } else{
+          
+    try {
+        const {data} = await api.get('/api/watchlist/get')
+        if(data.success){
+          console.log(data)
+          setWatchlistData(data.userWatchlist)
+        }
+
+      } catch (error) {
+        console.log(error.message)
+      } 
+    
+    finally{
+      setLoading(false)
+    }
+        }
+  }
+    fetchProfileContent()
+  }, [navigate])
+
+    if (loading) {
+    return (
+      <div className={`w-full min-h-screen flex flex-col items-center justify-center font-bold
+        ${isDarkMode ? 'bg-zinc-950 text-white' : 'bg-slate-50 text-zinc-900'}`}>
+        <span className="text-red-600 text-2xl font-black tracking-widest animate-pulse">CINNECT</span>
+        <p className="text-xs opacity-50 mt-1">Streaming watchlists...</p>
+      </div>
+    );
+  }
   const statusOptions = ['Plan to Watch', 'Watching', 'Completed', 'Dropped', 'On Hold'];
 
   const updateItemStatus = (itemId, newStatus) => {
@@ -70,7 +115,9 @@ const Profile = () => {
     }
   };
 
+
   return (
+    
     <div className={`w-full min-h-screen pb-24 flex flex-col m-0 p-0 relative overflow-x-hidden transition-colors duration-300
       ${isDarkMode ? 'bg-zinc-950 text-white' : 'bg-slate-150 text-zinc-900'}`}
     >
@@ -113,23 +160,23 @@ const Profile = () => {
           <div className="absolute top-6 right-12 z-50 flex items-center gap-4">
         <div className="relative">
           <button 
-            onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+            onClick={() => setprofileButton(!profileButton)}
             className="w-10 h-10 rounded-full bg-red-600 text-white font-black flex items-center justify-center shadow-lg cursor-pointer hover:scale-105 transition-transform"
           >
             {user?.name && user.name.charAt(0).toUpperCase()}
           </button>
 
           {/* 👤 DROPDOWN MENU */}
-          {profileDropdownOpen && (
+          {profileButton && (
             <div className={`absolute right-0 mt-2 w-48 rounded-xl shadow-2xl border p-1 animate-fadeIn flex flex-col gap-1 backdrop-blur-md
               ${isDarkMode ? 'bg-zinc-900/95 border-zinc-850' : 'bg-white/95 border-slate-200'}`}
             >
               <button 
-                onClick={() => { navigate('/dashboard'); setProfileDropdownOpen(false); }}
+                onClick={() => { navigate('/dashboard'); setprofileButton(false); }}
                 className={`w-full text-left px-4 py-2.5 text-xs font-bold rounded-lg transition-colors cursor-pointer
                   ${isDarkMode ? 'hover:bg-zinc-800 text-zinc-200' : 'hover:bg-slate-100 text-zinc-700'}`}
               >
-                {'<- Dashboard'}
+                {`<- Dashboard`}
               </button>
               <button 
                 onClick={()=>{setisDarkMode(!isDarkMode)}}

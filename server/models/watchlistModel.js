@@ -6,14 +6,15 @@ const WatchlishSchema = new mongoose.Schema({
             ref: 'user',
             required: true
             },
+    mediaTitle:{
+            type: String,
+            },
+             mediaTitle:{
+            type: String,
+            },      
     mediaId:{
              type: String,
              required: true
-            },
-    mediaType:{
-            type:  String, 
-            enum: ['anime', 'drama', 'movie'],
-            required: true
             },
     posterPath: {
             type: String,

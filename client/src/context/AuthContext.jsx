@@ -34,11 +34,11 @@ export const AppContext = (props) => {
     //login user
 
      const loginUser = async (email, password) => {
-      console.log("➡️ A. registerUser function started inside context!");
+
         try {
-          console.log("➡️ B. Sending API post request to backend...");
+ 
           const {data} = await api.post('/api/auth/login',{email, password})
-          console.log("➡️ C. Response received from server:", data);
+
           if(data.success){
             toast.success(data.message)
             getUserData()
@@ -46,7 +46,7 @@ export const AppContext = (props) => {
             setloginPopUp(false)
           }
         } catch (error) {
-          console.log("❌ D. Catch block caught an error:", error);
+  
             toast.error(error.message)
         }
     }

@@ -16,7 +16,7 @@ export const tmdbEndpoints = {
   trendingMovies: '/trending/movie/week',
   popularMovies: '/movie/popular',
   searchMovies: '/search/movie',
-
+  
   trendingTV: '/trending/tv/week',
   animeSeries: '/discover/tv?with_genres=16&with_original_language=ja&sort_by=popularity.desc',
   

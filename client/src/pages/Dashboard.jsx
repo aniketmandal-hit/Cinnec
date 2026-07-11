@@ -2,8 +2,12 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom'; // For routing to profile
 import { AppContent } from '../context/AuthContext.jsx';
 import tmdb, { tmdbEndpoints } from '../utils/Tmdb.jsx';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import api from '../utils/Api.jsx';
 
 const Dashboard = () => {
+    axios.defaults.withCredentials = true
   const { isDarkMode, setisDarkMode, user, setisLoggedin } = useContext(AppContent);
   const navigate = useNavigate();
 
@@ -40,15 +44,12 @@ const Dashboard = () => {
         const movieResults = movieRes.data.results || [];
         const animeResults = animeRes.data.results || [];
 
-        // 🧠 MIX THEM HERE: Combine both arrays into one master list
         const blended = [...movieResults, ...animeResults];
         
-        // Optional: Shuffle them so movies and anime are completely randomized together
         const shuffled = blended.sort(() => 0.5 - Math.random());
         
         setCombinedMedia(shuffled);
         
-        // Set your featured banner background from the first movie with an image
         if (movieResults.length > 0) {
           const validHero = movieResults[0];
           setFeaturedMovie(validHero);
@@ -116,6 +117,21 @@ const Dashboard = () => {
         <p className="text-xs opacity-50 mt-1">Streaming watchlists...</p>
       </div>
     );
+  }
+
+  //Add watchlist handler
+
+  const addWatchlistHandler = async()=>{
+    const cleanTitle = selectedMovie.title === undefined ? '' : selectedMovie.title;
+  const cleanName = selectedMovie.name === undefined ? '' : selectedMovie.name;
+    try {
+        const {data} = await api.post('/api/watchlist/add',{mediaId: selectedMovie.id.toString(), mediaTitle: cleanTitle, mediaName: cleanName,  posterPath: selectedMovie.poster_path, status: 'Plan to Watch'})
+        if(data.success){
+            toast.success(data.message || 'Item successfuly added to watchlist')
+        } else{toast.error(data.error || data.message )}
+    } catch (error) {
+        toast.error(error.message)
+    }
   }
 
   // Use search array or your blended master list array
@@ -312,7 +328,7 @@ const Dashboard = () => {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-dashed border-zinc-800/10 dark:border-zinc-700/30">
-                <button onClick={() => console.log("Watchlist modification logic triggered for ID:", selectedMovie.id)} className="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl shadow-lg active:scale-95 cursor-pointer text-center">➕ Add to Watchlist</button>
+                <button onClick={() => {addWatchlistHandler()}} className="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl shadow-lg active:scale-95 cursor-pointer text-center">➕ Add to Watchlist</button>
                 <button onClick={() => console.log("Review popup launcher initiated")} className={`flex-1 py-2.5 border text-xs font-bold rounded-xl transition-all active:scale-95 cursor-pointer text-center ${isDarkMode ? 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800 text-white' : 'bg-slate-50 border-slate-200 hover:bg-slate-100 text-zinc-800'}`}>✍️ Write Review</button>
               </div>
             </div>

@@ -25,7 +25,7 @@ const App = () => {
           {/* 🎬 Protected Dashboard Route */}
           <Route path="/dashboard" element={isLoggedin ? <Dashboard /> : <Navigate to="/" />} />
       
-           <Route path="/profile" element={isLoggedin ? <Profile /> : <Navigate to="/" />} />
+           <Route path="/profile" element={!localStorage.token ? <Profile /> : <Navigate to="/" replace/>} />
         </Routes>
       </main>
     </div>

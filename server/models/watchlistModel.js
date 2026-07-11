@@ -11,7 +11,7 @@ const WatchlishSchema = new mongoose.Schema({
             },
              mediaTitle:{
             type: String,
-            },      
+            },    
     mediaId:{
              type: String,
              required: true

@@ -3,6 +3,7 @@ import { AppContent } from '../context/AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import api from '../utils/Api.jsx';
+import { toast } from 'react-toastify';
 
 const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
   const { isDarkMode,setisDarkMode, user, isloggedin} = useContext(AppContent);
@@ -20,7 +21,7 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
   const [loading, setLoading] = useState(true)
 
   // Editable Profile Form States
-  const [profileName, setProfileName] = useState(user?.name);
+  const [profileName, setProfileName] = useState('');
   const [profileBio, setProfileBio] = useState('Please enter your bio here');
 
   // Mock array strictly following the fields dictated by your Mongoose WatchlistSchema
@@ -54,6 +55,11 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
     }
   ]);
 
+  useEffect(()=>{
+    if(user?.name){
+      setProfileName(user.name)
+    }
+  }, [user])
   //Loading screen for refresh
   useEffect(()=>{
     const fetchProfileContent = async () => {
@@ -67,7 +73,7 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
     try {
         const {data} = await api.get('/api/watchlist/get')
         if(data.success){
-          console.log(data)
+          console.log(data.userWatchlist)
           setWatchlistData(data.userWatchlist)
         }
 
@@ -83,6 +89,7 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
     fetchProfileContent()
   }, [navigate])
 
+
     if (loading) {
     return (
       <div className={`w-full min-h-screen flex flex-col items-center justify-center font-bold
@@ -92,6 +99,7 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
       </div>
     );
   }
+   
   const statusOptions = ['Plan to Watch', 'Watching', 'Completed', 'Dropped', 'On Hold'];
 
   const updateItemStatus = (itemId, newStatus) => {
@@ -286,6 +294,7 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
           </div>
         </div>
 
+           
         {/* TAB FILTERS */}
         <div className="flex flex-wrap items-center gap-1.5 border-b border-zinc-800/10 dark:border-zinc-800/60 pb-2 mt-4">
           {['all', 'Plan to Watch', 'Watching', 'Completed', 'Dropped'].map((tab) => (
@@ -303,23 +312,46 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
         </div>
 
         {/* WATCHLIST SMALL GRID DECK */}
-        {filteredItems.length > 0 ? (
+        
+        {watchlistData.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
-            {filteredItems.map((item) => (
+            {watchlistData.map((item) => (
               <div 
                 key={item._id}
                 className={`group rounded-xl overflow-hidden border flex flex-col relative shadow-md transition-all duration-300 hover:-translate-y-1
                   ${isDarkMode ? 'bg-zinc-900/50 border-zinc-800/60 hover:border-red-500/30' : 'bg-white border-slate-200 hover:border-red-500/20'}`}
               >
                 <div className="relative aspect-2/3 w-full overflow-hidden bg-zinc-800">
-                  <img src={item.posterPath} alt={item.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  <span className="absolute top-1.5 left-1.5 px-1.5 py-0.2 rounded text-[7px] font-black uppercase tracking-wide bg-black/80 text-red-500 border border-red-500/20">
-                    {item.mediaType}
-                  </span>
+                  <img src={`https://image.tmdb.org/t/p/w500${item.posterPath}`} alt={item.mediaTitle} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  
+
+                  <button 
+              onClick={async() => {
+                try {
+                   const {data} = await api.post('/api/watchlist/delete', {mediaId: item.mediaId})
+                if(data.success){
+                  console.log(data.message)
+                  toast.success(data.message)
+                  const updateData = watchlistData.filter(watchItem => {
+           return watchItem.mediaId != item.mediaId;
+        });
+                  setWatchlistData([...updateData])
+                }else{ toast.error(data.message)}
+                } catch (error) {
+                  toast.error(error.message)
+                }
+               
+              } }
+              className="absolute top-1 right-1 w-4 h-4 rounded-full hover:text-red-700 flex items-center justify-center text-[10px] font-bold z-20 cursor-pointer bg-zinc-800 text-zinc-400"
+            >
+              ✕
+            </button>
                 </div>
 
+                
+
                 <div className="p-2 flex-1 flex flex-col justify-between gap-1.5 relative z-10">
-                  <h3 className="font-bold text-[11px] truncate tracking-tight">{item.title}</h3>
+                  <h3 className="font-bold text-[11px] truncate tracking-tight">{item.mediaTitle || item.mediaName}</h3>
                   
                   <div className="relative">
                     <button 

@@ -64,27 +64,70 @@ const Dashboard = () => {
     fetchDashboardContent();
   }, []);
 
-  // Live Search Effect (Debounced)
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(async () => {
-      if (searchQuery.trim().length > 0) {
-        setIsSearching(true);
-        try {
-          // Multi-search automatically queries movies, TV shows, and anime mixed together
+useEffect(() => {
+  const delayDebounceFn = setTimeout(async () => {
+    if (searchQuery.trim().length > 0) {
+      setIsSearching(true);
+      try {
+        const cleanQuery = searchQuery.toLowerCase().trim();
+        
+        const genres = {
+          action: "28",
+          comedy: "35",
+          horror: "27",
+          romance: "10749",
+          scifi: "878",
+          "sci-fi": "878",
+          animation: "16",
+          drama: "18",
+          "rom com": "10749",
+        "romcom": "10749",
+        };
+
+        // 1. If it's a normal title search, keep it exactly as it was
+        if (!genres[cleanQuery]) {
           const { data } = await tmdb.get('/search/multi', {
             params: { query: searchQuery }
           });
-          setSearchResults(data.results);
-        } catch (error) {
-          console.error("Search failure:", error.message);
+          setSearchResults(data.results || []);
+        } else {
+          // 2. If it's a genre search, fetch both Movies and TV shows at the same time
+          const genreId = genres[cleanQuery];
+          
+          const [movieRes, tvRes] = await Promise.all([
+            // Pulls English blockbusters and Japanese anime movies
+            tmdb.get('/discover/movie', {
+              params: {
+                with_genres: genreId,
+                with_original_language: 'en|ja'
+              }
+            }),
+            // Pulls K-Dramas, J-Dramas, and Anime series
+            tmdb.get('/discover/tv', {
+              params: {
+                with_genres: genreId,
+                with_original_language: 'ko|ja' // ko = Korean, ja = Japanese
+              }
+            })
+          ]);
+
+          const movies = movieRes.data.results || [];
+          const shows = tvRes.data.results || [];
+
+          // Combine them into one list
+          setSearchResults([...movies, ...shows]);
         }
-      } else {
-        setIsSearching(false);
-        setSearchResults([]);
+      } catch (error) {
+        console.error("Search failure:", error.message);
       }
-    }, 400);
-    return () => clearTimeout(delayDebounceFn);
-  }, [searchQuery]);
+    } else {
+      setIsSearching(false);
+      setSearchResults([]);
+    }
+  }, 400);
+  
+  return () => clearTimeout(delayDebounceFn);
+}, [searchQuery]);
 
   // 🛠️ LOGIC HANDLER: Click Card to open detail modal
   const handleCardClick = async (item) => {

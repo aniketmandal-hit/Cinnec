@@ -31,6 +31,9 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
     if(user?.name){
       setProfileName(user.name)
     }
+    if(user?.bio){
+      setProfileBio(user.bio)
+    }
   }, [user])
   //Loading screen for refresh
   useEffect(()=>{
@@ -95,6 +98,19 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
     }
     
   };
+
+  const updateDetails = async()=>{
+    try {
+      const {data} = await api.post('/api/user/update-details',{newName: profileName, newBio: profileBio})
+    if(data.success){
+      toast.success(data.message)
+     
+      {setIsEditingProfile(!isEditingProfile)}
+    } else{toast.error(data.message)}
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
 
   const filteredItems = activeTab === 'all' 
     ? watchlistData 
@@ -228,7 +244,7 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
 
             <div className="flex items-center gap-2 self-end sm:self-center">
               <button
-                onClick={() => setIsEditingProfile(!isEditingProfile)}
+                onClick={() =>{isEditingProfile ? updateDetails() : setIsEditingProfile(!isEditingProfile)}}
                 className={`px-4 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer active:scale-95 shadow-md border
                   ${isEditingProfile 
                     ? 'bg-emerald-600 text-white border-emerald-500 hover:bg-emerald-700' 

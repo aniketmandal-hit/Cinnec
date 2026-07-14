@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import api from '../utils/Api.jsx';
 import { toast } from 'react-toastify';
+import searchProfile from '../components/searchProfile.jsx';
 
 const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
   const { isDarkMode,setisDarkMode, user, isloggedin} = useContext(AppContent);
@@ -297,7 +298,7 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
           </div>
         </div>
 
-           
+           <searchProfile/>
         {/* TAB FILTERS */}
         <div className="flex flex-wrap items-center gap-1.5 border-b border-zinc-800/10 dark:border-zinc-800/60 pb-2 mt-4">
           {['all', 'Plan to Watch', 'Watching', 'Completed', 'Dropped'].map((tab) => (

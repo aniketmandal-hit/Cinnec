@@ -44,11 +44,11 @@ export const searchUser = async (req, res) => {
     const {username} = req.query
 
     try {
-         const user = await userModel.findOne({username: {$regex: username, $option: 'i'}}).select('username')
-    if(!user){
+         const users = await userModel.findOne({username: {$regex: username, $options: 'i'}}).select('username')
+    if(!users){
         return res.json({success: false, message: 'No user found with this username'})
     }
-   return res.json({success: true, user})
+   return res.json({success: true, users})
     } catch (error) {
         return res.json({success: false, message: error.message})
     }

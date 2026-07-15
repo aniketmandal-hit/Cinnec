@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import api from '../utils/Api.jsx';
 import { toast } from 'react-toastify';
-import searchProfile from '../components/searchProfile.jsx';
+import SearchProfile from '../components/SearchProfile.jsx';
 
 const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
-  const { isDarkMode,setisDarkMode, user, isloggedin} = useContext(AppContent);
+  const { isDarkMode,setisDarkMode, user, isloggedin, setisLoggedin} = useContext(AppContent);
   axios.defaults.withCredentials = true
   
  
@@ -98,6 +98,11 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
       toast.error(error.message)
     }
     
+  };
+
+  const handleLogout = () => {
+    setisLoggedin(false);
+    navigate('/');
   };
 
   const updateDetails = async()=>{
@@ -199,7 +204,7 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
               </button>
               <hr className={isDarkMode ? 'border-zinc-800' : 'border-slate-100'} />
               <button 
-                onClick={()=>{setisLoggedin(false)}}
+                onClick={handleLogout}
                 className="w-full text-left px-4 py-2.5 text-xs font-bold text-red-500 hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer"
               >
                 🚪 Log Out
@@ -296,9 +301,12 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
               <p className="text-[9px] font-bold uppercase opacity-50 tracking-wider">Following</p>
             </div>
           </div>
+          
         </div>
-
-           <searchProfile/>
+            
+              <SearchProfile/>
+            
+           
         {/* TAB FILTERS */}
         <div className="flex flex-wrap items-center gap-1.5 border-b border-zinc-800/10 dark:border-zinc-800/60 pb-2 mt-4">
           {['all', 'Plan to Watch', 'Watching', 'Completed', 'Dropped'].map((tab) => (

@@ -8,7 +8,7 @@ import api from '../utils/Api.jsx';
 
 const Dashboard = () => {
     axios.defaults.withCredentials = true
-  const { isDarkMode, setisDarkMode, user, setisLoggedin } = useContext(AppContent);
+  const { isDarkMode, setisDarkMode, user, setuser,  setisLoggedin } = useContext(AppContent);
   const navigate = useNavigate();
 
   // Core Data States
@@ -147,9 +147,18 @@ useEffect(() => {
     }
   };
 
-  const handleLogout = () => {
+   const handleLogout = async() => {
+    try {
+        const {data} = await api.post('/api/auth/logout')
+  if(data.success){
+    toast.success(data.message) 
     setisLoggedin(false);
     navigate('/');
+  } else { toast.error(data.message)
+        }
+    } catch (error) {
+      toast.error(error.message)
+    }
   };
 
   if (loading) {

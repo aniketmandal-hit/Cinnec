@@ -26,7 +26,7 @@ export const AppContext = (props) => {
             setisLoggedin(true)
             await getUserData();
             setloginPopUp(false);
-          }
+          } else{toast.error(data.message)}
         } catch (error) {
             toast.error(error.message)
         }
@@ -44,7 +44,7 @@ export const AppContext = (props) => {
             getUserData()
             setisLoggedin(true)
             setloginPopUp(false)
-          }
+          } else{toast.error(data.message)}
         } catch (error) {
   
             toast.error(error.message)

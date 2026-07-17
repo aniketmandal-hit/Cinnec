@@ -19,7 +19,7 @@ const onSubmitHandler = async (e) => {
   e.preventDefault();
   try {
     if (signUp) {   
-      await registerUser(name, username, email, password);
+    await registerUser(name, username, email, password);
 
     } else {
       await loginUser(email, password);

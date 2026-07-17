@@ -3,6 +3,7 @@ import { AppContent } from '../context/AuthContext.jsx'
 import { useContext } from 'react'
 import api from '../utils/Api.jsx'
 import { toast } from 'react-toastify'
+import Profile from '../pages/Profile.jsx'
 
 const SearchProfile = () => {
   // 🎯 IMPORT YOUR THEME STATE HERE FROM YOUR APPCONTENT CONTEXT
@@ -10,6 +11,7 @@ const { isDarkMode } = useContext(AppContent)
 const [selectSearch, setSelectSearch] = useState(false)
 const [search, setSearch] = useState('')
 const [userCard, setuserCard] = useState([])
+const [selectedUsers, setSelectedUsers] = useState(null)
 
 
   const onSubmitHandler = async (e) => {
@@ -65,7 +67,7 @@ const [userCard, setuserCard] = useState([])
     
             <button 
               onClick={() => { setSelectSearch(setSelectSearch(false)) }}
-              className="absolute top-0 right-0 w-6 h-6 rounded-full hover:text-red-700 flex items-center justify-center text-xs font-bold z-20 cursor-pointer bg-zinc-800 text-zinc-400"
+              className="absolute top-1 right-1 w-6 h-6 rounded-full hover:text-red-700 flex items-center justify-center text-xs font-bold z-20 cursor-pointer bg-zinc-800 text-zinc-400"
             >
               ✕
             </button>
@@ -101,14 +103,17 @@ const [userCard, setuserCard] = useState([])
       <div className={`mt-5 border-t pt-3 space-y-2 ${isDarkMode ? 'border-slate-900' : 'border-slate-100'}`}>
         
         {/* Profile Card Template */}
+            {!selectedUsers ? (
+              <>
        {Array.isArray(userCard) && userCard.length > 0 ? (
     userCard.map((user) => ( 
       <div 
         key={user._id}
+        onClick={()=>{setSelectedUsers(user)}}
         className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer transition-all duration-200 group 
         ${isDarkMode ? 'bg-slate-900/40 border-slate-900' : 'bg-slate-50/50 border-slate-200/60'}`}
       >
-        <div className="flex items-center gap-3">
+        <div  className="flex items-center gap-3">
           <div className={`w-9 h-9 rounded-full border flex items-center justify-center text-xs font-bold uppercase tracking-wider ${isDarkMode ? 'text-red-500 bg-slate-800' : 'text-red-600 bg-white'}`}>
             {user.username?.charAt(0) || 'U'}
           </div>
@@ -123,8 +128,17 @@ const [userCard, setuserCard] = useState([])
     <p className="text-xs text-center py-4 text-slate-500">
       No profiles found. Try a different username!
     </p>
-  )}
-       
+  )} </>
+ ) : (
+    <div className="fixed inset-0 w-full h-full bg-slate-950/95 z-50 p-6 overflow-y-auto">
+    <Profile 
+      userData={selectedUsers}
+      readOnly={true}
+      onBack={() => setSelectedUsers(null)}
+    />
+  </div>
+  )
+  }
 
       </div>
 

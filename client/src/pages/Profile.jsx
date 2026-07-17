@@ -1,16 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AppContent } from '../context/AuthContext.jsx';
-import { data, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import api from '../utils/Api.jsx';
 import { toast } from 'react-toastify';
 import SearchProfile from '../components/SearchProfile.jsx';
 
-const Profile = (mediaId, mediaTitle, mediaName, mediaType, {userData= null, readOnly= false ,onBack}) => {
-  const { isDarkMode,setisDarkMode, user, setuser, isloggedin, setisLoggedin} = useContext(AppContent);
+const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
+  const { isDarkMode,setisDarkMode, user, isloggedin, setisLoggedin} = useContext(AppContent);
   axios.defaults.withCredentials = true
   
- const profileToDisplay = userData || user
+ 
 
   const navigate = useNavigate()
   // Interactive UI States
@@ -22,20 +22,11 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType, {userData= null, rea
   const [loading, setLoading] = useState(true)
 
   // Editable Profile Form States
-  const [profileName, setProfileName] = useState(profileToDisplay?.name|| '');
-  const [profileBio, setProfileBio] = useState(profileToDisplay?.bio || 'Please enter your bio here');
+  const [profileName, setProfileName] = useState('');
+  const [profileBio, setProfileBio] = useState('Please enter your bio here');
 
   // Mock array strictly following the fields dictated by your Mongoose WatchlistSchema
-  const [watchlistData, setWatchlistData] = useState(profileToDisplay?.watchlistData || []);
-
-  useEffect(()=>{
-    if(profileToDisplay){
-      setProfileName(profileToDisplay.name)
-      setProfileBio(profileToDisplay.bio)
-      setWatchlistData(profileToDisplay.watchlistData)
-    }
-  }, [userData, user])
-
+  const [watchlistData, setWatchlistData] = useState([]);
 
   useEffect(()=>{
     if(user?.name){
@@ -109,18 +100,9 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType, {userData= null, rea
     
   };
 
-   const handleLogout = async() => {
-    try {
-        const {data} = await api.post('/api/auth/logout')
-  if(data.success){
-    toast.success(data.message) 
+  const handleLogout = () => {
     setisLoggedin(false);
     navigate('/');
-  } else { toast.error(data.message)
-        }
-    } catch (error) {
-      toast.error(error.message)
-    }
   };
 
   const updateDetails = async()=>{
@@ -190,21 +172,6 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType, {userData= null, rea
           <div className="absolute w-0.5 h-150 bg-linear-to-b from-red-600 to-transparent -rotate-15deg origin-top" />
         </div>
       </div>
-
-
-          <div className="p-6">
-      {/* 5. Add a back button at the top if it's read-only so you can return to the search list */}
-      {readOnly && (
-        <button onClick={onBack} className="mb-4 text-xs text-red-500 hover:underline">
-          &larr; Back to Search
-        </button>
-      )}
-
-      {/* Render your profile layout below using your state values */}
-      <h1 className="text-xl font-bold">{username}'s Profile</h1>
-      
-      {/* ... rest of your profile UI template layout ... */}
-    </div>
 
 
           <div className="absolute top-6 right-12 z-50 flex items-center gap-4">

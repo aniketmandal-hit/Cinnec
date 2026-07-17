@@ -3,7 +3,7 @@ import { AppContent } from '../context/AuthContext.jsx'
 import { useContext } from 'react'
 import api from '../utils/Api.jsx'
 import { toast } from 'react-toastify'
-import Profile from '../pages/Profile.jsx'
+import SearchedUserProfile from '../pages/SearchedUserProfile.jsx'
 
 const SearchProfile = () => {
   // 🎯 IMPORT YOUR THEME STATE HERE FROM YOUR APPCONTENT CONTEXT
@@ -60,13 +60,14 @@ const [selectedUsers, setSelectedUsers] = useState(null)
 
     {selectSearch && (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn">
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => { setSelectSearch(false)}} />
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" 
+          onClick={() => { setSelectSearch(false)}} />
     <div className={`w-full absolute max-w-md mx-auto z-50 my-6 p-6 border rounded-xl shadow-2xl transition-colors duration-200 
       ${isDarkMode ? 'bg-slate-950 border-red-900/40 shadow-red-950/20 text-white' : 'bg-white border-slate-200 shadow-slate-200/50 text-slate-900'}`}
     >
     
             <button 
-              onClick={() => { setSelectSearch(setSelectSearch(false)) }}
+              onClick={() => { setSelectSearch(false) }}
               className="absolute top-1 right-1 w-6 h-6 rounded-full hover:text-red-700 flex items-center justify-center text-xs font-bold z-20 cursor-pointer bg-zinc-800 text-zinc-400"
             >
               ✕
@@ -80,7 +81,7 @@ const [selectedUsers, setSelectedUsers] = useState(null)
           onChange={(e)=>{
             setSearch(e.target.value)
           }}
-          input={search}
+          value={search}
             type="text" 
             placeholder="Search usernames..." 
             className={`w-full px-4 py-3 border rounded-lg outline-none transition-all text-sm font-medium focus:ring-1 
@@ -130,11 +131,11 @@ const [selectedUsers, setSelectedUsers] = useState(null)
     </p>
   )} </>
  ) : (
-    <div className="fixed inset-0 w-full h-full bg-slate-950/95 z-50 p-6 overflow-y-auto">
-    <Profile 
-      userData={selectedUsers}
-      readOnly={true}
+   <div className="fixed inset-0 w-full h-full bg-slate-950 z-50 p-6 overflow-y-auto animate-fadeIn">
+    <SearchedUserProfile 
+      user={selectedUsers}
       onBack={() => setSelectedUsers(null)}
+      
     />
   </div>
   )

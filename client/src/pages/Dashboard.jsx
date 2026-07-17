@@ -176,8 +176,21 @@ useEffect(() => {
   const addWatchlistHandler = async()=>{
     const cleanTitle = selectedMovie.title === undefined ? '' : selectedMovie.title;
   const cleanName = selectedMovie.name === undefined ? '' : selectedMovie.name;
+  console.log(selectedMovie)
+  const mediaType = ()=>{
+      if(selectedMovie.original_language === "en" ){
+        const movieType = 'Movie'
+      } else if(selectedMovie.original_language === "ja" && !selectedMovie.media_type){
+        const movieType = 'Anime'
+      } else if(selectedMovie.original_language === "ko" && selectedMovie.media_type === "tv"){
+        const movieType = 'K-drama'
+      } else if(selectedMovie.original_language === "ja" && selectedMovie.media_type === "tv"){
+        const movieType = 'J-drama'
+      } else {"Movie"}
+    }
+    console.log(mediaType)
     try {
-        const {data} = await api.post('/api/watchlist/add',{mediaId: selectedMovie.id.toString(), mediaTitle: cleanTitle, mediaName: cleanName,  posterPath: selectedMovie.poster_path, status: 'Plan to Watch'})
+        const {data} = await api.post('/api/watchlist/add',{mediaId: selectedMovie.id.toString(), mediaTitle: cleanTitle, mediaName: cleanName, mediaType: mediaType,  posterPath: selectedMovie.poster_path, status: 'Plan to Watch'})
         if(data.success){
             toast.success(data.message || 'Item successfuly added to watchlist')
         } else{toast.error(data.error || data.message )}

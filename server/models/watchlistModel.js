@@ -9,7 +9,7 @@ const WatchlishSchema = new mongoose.Schema({
     mediaTitle:{
             type: String,
             },
-             mediaTitle:{
+    mediaName:{
             type: String,
             },    
     mediaId:{
@@ -20,6 +20,9 @@ const WatchlishSchema = new mongoose.Schema({
             type: String,
             required: true
             },
+    mediaType:{
+        type: String
+    } ,
     status: {
             type: String,
             default: 'Plan to Watch',

@@ -304,7 +304,8 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
           
         </div>
             
-              <SearchProfile/>
+                <SearchProfile/>
+            
             
            
         {/* TAB FILTERS */}

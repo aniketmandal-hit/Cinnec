@@ -13,6 +13,7 @@ export const watchlist = async (req, res)=>{
             userId,
             mediaTitle,
             mediaName,
+            mediaType,
             mediaId,
             posterPath,
             status

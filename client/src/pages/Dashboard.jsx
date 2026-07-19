@@ -177,20 +177,25 @@ useEffect(() => {
     const cleanTitle = selectedMovie.title === undefined ? '' : selectedMovie.title;
   const cleanName = selectedMovie.name === undefined ? '' : selectedMovie.name;
   console.log(selectedMovie)
-  const mediaType = ()=>{
-      if(selectedMovie.original_language === "en" ){
-        const movieType = 'Movie'
-      } else if(selectedMovie.original_language === "ja" && !selectedMovie.media_type){
-        const movieType = 'Anime'
-      } else if(selectedMovie.original_language === "ko" && selectedMovie.media_type === "tv"){
-        const movieType = 'K-drama'
-      } else if(selectedMovie.original_language === "ja" && selectedMovie.media_type === "tv"){
-        const movieType = 'J-drama'
-      } else {"Movie"}
-    }
+
+  let mediaType = "Movie"
+
+  const isAnimation = selectedMovie.genre_ids?.includes(16) || 
+                      selectedMovie.genres?.some(g => g.id === 16 || g.name === 'Animation');
+  
+     if (selectedMovie.original_language === "ja" && isAnimation) {
+    mediaType  = 'Anime';
+  } else if (selectedMovie.original_language === "ja" && selectedMovie.media_type === "tv") {
+      mediaType = 'J-drama';
+  } else if (selectedMovie.original_language === "ko" && selectedMovie.media_type === "tv") {
+    mediaType  = 'K-drama';
+  } else if (selectedMovie.original_language === "en") {
+    mediaType  = 'Movie';
+  }
+    
     console.log(mediaType)
     try {
-        const {data} = await api.post('/api/watchlist/add',{mediaId: selectedMovie.id.toString(), mediaTitle: cleanTitle, mediaName: cleanName, mediaType: mediaType,  posterPath: selectedMovie.poster_path, status: 'Plan to Watch'})
+        const {data} = await api.post('/api/watchlist/add',{mediaId: selectedMovie.id.toString(), mediaTitle: cleanTitle, mediaName: cleanName, mediaType,  posterPath: selectedMovie.poster_path, status: 'Plan to Watch'})
         if(data.success){
             toast.success(data.message || 'Item successfuly added to watchlist')
         } else{toast.error(data.error || data.message )}
@@ -278,7 +283,7 @@ useEffect(() => {
           </div>
 
           {/* 🔍 THE OPERATIONAL SEARCH INPUT */}
-          <div className="w-full md:w-80 relative right-15">
+          <div className="w-full md:w-80 relative lg:right-15">
             <span className="absolute left-3.5 top-2.5 text-xs opacity-40">🔍</span>
             <input 
               type="text"
@@ -358,7 +363,7 @@ useEffect(() => {
               ✕
             </button>
 
-            <div className="w-full md:w-2/5 aspect-2/3 md:aspect-auto md:h-125">
+            <div className="w-full md:w-2/5 sm:aspect-auto aspect-2/3 md:aspect-auto md:h-125">
               <img src={`https://image.tmdb.org/t/p/w500${selectedMovie.poster_path}`} alt={selectedMovie.title || selectedMovie.name} className="w-full h-full object-cover" />
             </div>
 

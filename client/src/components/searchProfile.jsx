@@ -33,7 +33,7 @@ const [selectedUsers, setSelectedUsers] = useState(null)
 
     <button
       onClick={()=>{setSelectSearch(true)}}
-      className={`w-full absolute right-12 sm:w-auto px-4 py-2 font-bold rounded-xl text-base tracking-wide uppercase transition-all duration-300 transform active:scale-[0.98] shadow-lg outline-none focus:ring-2 
+      className={`w-full md:w-auto lg:absolute lg:right-12 sm:w-auto px-4 py-2 font-bold rounded-xl text-base tracking-wide uppercase transition-all duration-300 transform active:scale-[0.98] shadow-lg outline-none focus:ring-2 
         ${isDarkMode
           ? 'bg-red-700 hover:bg-red-600 text-white border border-red-600/30 shadow-red-950/40 hover:shadow-red-600/20 focus:ring-red-500' 
           : 'bg-red-600 hover:bg-red-500 text-white shadow-red-600/30 hover:shadow-red-500/40 focus:ring-gray-500'}`}

@@ -8,6 +8,7 @@ const SearchedProfile = ({ user, onBack }) => {
 
   const [watchlist, setWatchlist] = useState([])
   const [loading, setLoading] = useState(true)
+  const [isFollowing, setIsFollowing] = useState(false);
 
   // 🎯 Fetch the watchlist items from the backend using the user's ID
   useEffect(() => {
@@ -36,7 +37,8 @@ const SearchedProfile = ({ user, onBack }) => {
 
   if (!user) return null;
 
-  console.log(watchlist)
+ 
+
  return (
     <div className={`fixed inset-0 w-full h-full z-50 p-4 sm:p-6 overflow-y-auto animate-fadeIn transition-colors duration-200 
       ${isDarkMode ? 'bg-black text-slate-100' : 'bg-slate-50 text-slate-900'}`}
@@ -76,6 +78,15 @@ const SearchedProfile = ({ user, onBack }) => {
               Cinephile Explorer
             </p>
           </div>
+          <button
+                onClick={() => setIsFollowing(!isFollowing)}
+                className={`px-4 absolute sm:right-13, top-16 lg:right-28 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer active:scale-95 shadow-md
+                  ${isFollowing 
+                    ? 'bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700' 
+                    : 'bg-red-600 hover:bg-red-700 text-white shadow-red-600/10'}`}
+              >
+                {isFollowing ? '✓ Following' : '➕ Follow'}
+            </button>
         </div>
 
         {/* Watchlist Section */}
@@ -136,14 +147,14 @@ const SearchedProfile = ({ user, onBack }) => {
                       {/* Info Row (Type and User Set Status) */}
                       <div className="flex flex-wrap items-center gap-2 text-[10px] font-black tracking-wider uppercase">
                         {/* Type Badge */}
-                        {item.type ?(<span className={`px-2 py-0.5 rounded-md border 
+                        {item.mediaType ?(<span className={`px-2 py-0.5 rounded-md border 
                           ${isDarkMode 
                             ? 'bg-red-950/40 text-red-400 border border-red-900/20' 
                             : 'bg-red-50 text-red-600 border border-red-200'}`}
                         >
-                          {item.type}
+                          {item.mediaType}
                         </span>) : (
-                          <h1>media</h1>
+                          <h1>m</h1>
                         )}
                         
                         

@@ -259,15 +259,7 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
                 {isEditingProfile ? '💾 Save Profile' : '✍️ Edit Profile'}
               </button>
 
-              <button
-                onClick={() => setIsFollowing(!isFollowing)}
-                className={`px-4 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer active:scale-95 shadow-md
-                  ${isFollowing 
-                    ? 'bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700' 
-                    : 'bg-red-600 hover:bg-red-700 text-white shadow-red-600/10'}`}
-              >
-                {isFollowing ? '✓ Following' : '➕ Follow'}
-              </button>
+              
             </div>
           </div>
 
@@ -292,10 +284,10 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
               <p className="font-black text-base text-red-500 dark:text-red-400">{watchlistData.length}</p>
               <p className="text-[9px] font-bold uppercase opacity-50 tracking-wider">Watchlist</p>
             </div>
-            <div>
+            {/* <div>
               <p className="font-black text-base">{isFollowing ? 1 : 0}</p>
               <p className="text-[9px] font-bold uppercase opacity-50 tracking-wider">Followers</p>
-            </div>
+            </div> */}
             <div>
               <p className="font-black text-base">69</p>
               <p className="text-[9px] font-bold uppercase opacity-50 tracking-wider">Following</p>

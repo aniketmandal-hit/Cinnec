@@ -118,9 +118,15 @@ const [selectedUsers, setSelectedUsers] = useState(null)
           <div className={`w-9 h-9 rounded-full border flex items-center justify-center text-xs font-bold uppercase tracking-wider ${isDarkMode ? 'text-red-500 bg-slate-800' : 'text-red-600 bg-white'}`}>
             {user.username?.charAt(0) || 'U'}
           </div>
-          <p className={`text-sm font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>
-            {user.username}
+          <div> 
+            <h1 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-slate-950'}`}>
+          {user.name}
+            </h1>
+            <p className={`text-xs font-light ${isDarkMode ? 'text-gray-400' : 'text-slate-950'}`}>
+            @{user.username}
           </p>
+          </div>
+         
         </div>
       </div>
     ))

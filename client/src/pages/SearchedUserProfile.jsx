@@ -73,14 +73,16 @@ const SearchedProfile = ({ user, onBack }) => {
             {user.username?.charAt(0) || 'U'}
           </div>
           <div>
-            <h1 className="text-2xl font-black tracking-tight">{user.username}</h1>
+            <h1 className={`text-2xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-black'}`}>
+              {user.name}
+              </h1>
             <p className={`text-xs uppercase tracking-widest font-bold ${isDarkMode ? 'text-zinc-500' : 'text-slate-500'}`}>
-              Cinephile Explorer
+              @{user.username}
             </p>
           </div>
           <button
                 onClick={() => setIsFollowing(!isFollowing)}
-                className={`px-4 absolute sm:right-13, top-16 lg:right-28 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer active:scale-95 shadow-md
+                className={`px-4 absolute right-15 sm:absolute top-40 lg:top-36 lg:right-35 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer active:scale-95 shadow-md
                   ${isFollowing 
                     ? 'bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700' 
                     : 'bg-red-600 hover:bg-red-700 text-white shadow-red-600/10'}`}

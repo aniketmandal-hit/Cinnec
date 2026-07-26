@@ -1,21 +1,27 @@
 import React, { useContext, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AppContent } from '../context/AuthContext.jsx';
-import { useNavigate } from 'react-router-dom';
+import { Await, useNavigate } from 'react-router-dom';
 import FollowersPage from './Followers.jsx';
+import api from '../utils/Api.jsx';
+import { toast } from 'react-toastify';
 
-const FollowingPage = () => {
+const FollowingPage = ({ userId }) => {
   const { isDarkMode } = useContext(AppContent);
-  const navigate = useNavigate()
 
   const [followingPage, setFollowingPage] = useState(false);
 
-  const followersClick = async () => {
-    <FollowersPage/>
-  }
+ 
 
   const onclickHandler = async () => {
     setFollowingPage(true);
+
+    try {
+    
+    {data.success ? toast.success(data.message) : toast.error(data.error)}
+    } catch (error) {
+      toast.error(error.message)
+    }
   };
 
   return (

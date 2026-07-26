@@ -39,7 +39,18 @@ const SearchedProfile = ({ user, onBack }) => {
 
   if (!user) return null;
 
+ const followHandler = async () => {
+try {
+   const data = await api.post(`/api/user/follow?targetId=${user._id}`)
+   if(data.success){
+    toast.success(data.message)
+   setIsFollowing(!isFollowing)
+   } else toast.error(data.message)
+} catch (error) {
+  toast.error(error.message)
+}
  
+ }
 
  return (
     <div className={`fixed inset-0 w-full h-full z-50 p-4 sm:p-6 overflow-y-auto animate-fadeIn transition-colors duration-200 
@@ -112,7 +123,7 @@ const SearchedProfile = ({ user, onBack }) => {
 
 
 <button
-                onClick={() => setIsFollowing(!isFollowing)}
+                onClick={followHandler}
                 className={`px-4 right-15  top-40 lg:top-36 lg:right-35 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer active:scale-95 shadow-md
                   ${isFollowing 
                     ? 'bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700' 
@@ -214,8 +225,12 @@ const SearchedProfile = ({ user, onBack }) => {
           )}
         </div>
       </div>
+      <FollowersPage userId={ user._id } />
+      <FollowingPage userId={ user._id } />
     </div>
+
   )
+  
 }
 
 export default SearchedProfile;

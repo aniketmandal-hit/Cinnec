@@ -9,7 +9,7 @@ const FollowersPage = () => {
 
   const onclickHandler = async () => {
     setfollowersPage(true);
-
+    
   };
 
   return (

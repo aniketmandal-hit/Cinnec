@@ -5,6 +5,8 @@ import axios from 'axios';
 import api from '../utils/Api.jsx';
 import { toast } from 'react-toastify';
 import SearchProfile from '../components/SearchProfile.jsx';
+import FollowersPage from '../components/Followers.jsx';
+import FollowingPage from '../components/following.jsx';
 
 const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
   const { isDarkMode,setisDarkMode, user, isloggedin, setisLoggedin} = useContext(AppContent);
@@ -284,13 +286,11 @@ const Profile = (mediaId, mediaTitle, mediaName, mediaType) => {
               <p className="font-black text-base text-red-500 dark:text-red-400">{watchlistData.length}</p>
               <p className="text-[9px] font-bold uppercase opacity-50 tracking-wider">Watchlist</p>
             </div>
-            {/* <div>
-              <p className="font-black text-base">{isFollowing ? 1 : 0}</p>
-              <p className="text-[9px] font-bold uppercase opacity-50 tracking-wider">Followers</p>
-            </div> */}
             <div>
-              <p className="font-black text-base">69</p>
-              <p className="text-[9px] font-bold uppercase opacity-50 tracking-wider">Following</p>
+              <FollowersPage/>
+            </div>
+            <div>
+              <FollowingPage/>
             </div>
           </div>
           

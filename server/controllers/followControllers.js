@@ -21,9 +21,13 @@ export const followControl = async(req, res)=>{
     if (isFollowing) {
         await userModel.findByIdAndDelete(currentId, {$pull: {following: targetId}})
         await userModel.findByIdAndDelete(targetId, {$pull: {followers: currentId}})
+
+        return res.json({success: true, message:"Unfollowing succcessful "})
     } else {
         await userModel.findByIdAndUpdate(currentId, {$addToSet: {following: targetId}})
         await userModel.findByIdAndUpdate(targetId, {$addToSet: {following: currentId}})
+
+        return res.json({success: true, message: `started following ${targetId.name}`})
     }
     
 

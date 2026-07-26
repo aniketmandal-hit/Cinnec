@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from 'react'
 import api from '../utils/Api.jsx' // Make sure this path matches your API utility
 import { toast } from 'react-toastify'
 import { AppContent } from '../context/AuthContext'
+import FollowingPage from '../components/following.jsx'
+import FollowersPage from '../components/Followers.jsx'
 
 const SearchedProfile = ({ user, onBack }) => {
     const {isDarkMode} = useContext(AppContent)
@@ -80,15 +82,46 @@ const SearchedProfile = ({ user, onBack }) => {
               @{user.username}
             </p>
           </div>
-          <button
+          
+
+
+            <div className="flex right-35 absolute items-center justify-center gap-3 sm:gap-6 p-2">
+  {/* 🕷️ Followers Trigger Card */}
+  <div className={`group relative px-5 py-3 rounded-xl border transition-all duration-300 cursor-pointer select-none active:scale-95 ${
+    isDarkMode 
+      ? 'bg-zinc-950/80 border-zinc-800 hover:border-red-700 hover:bg-zinc-900/60 shadow-lg hover:shadow-red-950/40' 
+      : 'bg-white border-slate-200 hover:border-red-500 hover:bg-red-50/50 shadow-sm hover:shadow-md'
+  }`}>
+    {/* Subtle Red Web Glow Accent on Hover */}
+    <div className="absolute inset-0 rounded-xl bg-red-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+    
+    <FollowersPage />
+  </div>
+
+  {/* 🕷️ Following Trigger Card */}
+  <div className={`group relative px-5 py-3 rounded-xl border transition-all duration-300 cursor-pointer select-none active:scale-95 ${
+    isDarkMode 
+      ? 'bg-zinc-950/80 border-zinc-800 hover:border-red-700 hover:bg-zinc-900/60 shadow-lg hover:shadow-red-950/40' 
+      : 'bg-white border-slate-200 hover:border-red-500 hover:bg-red-50/50 shadow-sm hover:shadow-md'
+  }`}>
+    {/* Subtle Red Web Glow Accent on Hover */}
+    <div className="absolute inset-0 rounded-xl bg-red-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+    
+    <FollowingPage />
+  </div>
+
+
+<button
                 onClick={() => setIsFollowing(!isFollowing)}
-                className={`px-4 absolute right-15 sm:absolute top-40 lg:top-36 lg:right-35 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer active:scale-95 shadow-md
+                className={`px-4 right-15  top-40 lg:top-36 lg:right-35 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer active:scale-95 shadow-md
                   ${isFollowing 
                     ? 'bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700' 
                     : 'bg-red-600 hover:bg-red-700 text-white shadow-red-600/10'}`}
               >
                 {isFollowing ? '✓ Following' : '➕ Follow'}
             </button>
+          </div>
+
         </div>
 
         {/* Watchlist Section */}
